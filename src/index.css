@@ -1,0 +1,51 @@
+:root {
+  --blue : #1C7CD6;
+  --body : #2B3750;
+  --muted : #6D727C
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background-color: #FBFDFF;
+}
+
+.diff-container {
+  font-family:Arial;
+  background: #FBFDFF;
+  color: #32405D; 
+  padding: 2rem;
+}
+
+.hunk {
+  margin-bottom: 15px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.header {
+  /* background: #f7f7f7; */
+  padding: 5px;
+  /* color: #fff; */
+}
+
+.lines pre {
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.added {
+  background: #d8ffcb;
+}
+
+.removed {
+  background: #ffe4e9;
+}
+
+.unchanged {
+  background: #f7f7f7;
+}
