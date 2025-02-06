@@ -3,16 +3,19 @@ import axios from "axios";
 import { useParams } from "react-router";
 
 export default function GitDiff() {
+  const BACK_END_URL = process.env.REACT_BACK_END_API;
+  
   const [diffData, setDiffData] = useState([]);
   const [commitInfo, setCommitInfo] = useState(null);
 
   // /repositories/:owner/:repo/commits/:commitOid
   const { owner ,repo, commitOid }= useParams()
 
+
   async function fetchDiff() {
     try {
       const response = await axios.get(
-        `http://localhost:5000/repositories/${owner}/${repo}/commits/${commitOid}/diff`
+        `${BACK_END_URL}/repositories/${owner}/${repo}/commits/${commitOid}/diff`
       );
       setDiffData(response.data);
       console.log("Diff data : ", response.data);
@@ -24,7 +27,7 @@ export default function GitDiff() {
   async function fetchCommitInfo() {
     try {
       const response = await axios.get(
-        `http://localhost:5000/repositories/${owner}/${repo}/commits/${commitOid}`
+        `${BACK_END_URL}/repositories/${owner}/${repo}/commits/${commitOid}`
       );
       setCommitInfo(response.data);
       console.log("Commit data : ", response.data);
