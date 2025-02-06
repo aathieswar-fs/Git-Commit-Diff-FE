@@ -2,43 +2,38 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 
-export default function GitDiff() {
+export default function App() {
   const BACK_END_URL = process.env.REACT_BACK_END_API;
 
   const [diffData, setDiffData] = useState([]);
   const [commitInfo, setCommitInfo] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [ error , setError] = useState(false);
+  const [loading , setLoading ] = useState(false);
 
-  const { owner, repo, commitOid } = useParams();
+  // /repositories/:owner/:repo/commits/:commitOid
+  const { owner, repo, commitOid } = useParams()
 
   async function fetchDiff() {
     try {
-      setLoading(true); 
       const response = await axios.get(
         `${BACK_END_URL}/repositories/${owner}/${repo}/commits/${commitOid}/diff`
       );
       setDiffData(response.data);
+      console.log("Diff data : ", response.data);
     } catch (error) {
-      setError("Failed to fetch diff data.");
       console.error("Error fetching diff:", error);
-    } finally {
-      setLoading(false); 
     }
   }
 
   async function fetchCommitInfo() {
     try {
-      setLoading(true); 
       const response = await axios.get(
         `${BACK_END_URL}/repositories/${owner}/${repo}/commits/${commitOid}`
       );
       setCommitInfo(response.data);
+      console.log("Commit data : ", response.data);
     } catch (error) {
-      setError("Failed to fetch commit info.");
       console.error("Error fetching commit info:", error);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -77,21 +72,10 @@ export default function GitDiff() {
     }
   };
 
+
   return (
     <div className="diff-container line">
-      {loading && (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="w-20 h-20 border-4 border-gray-300 border-t-4 border-t-blue-400 rounded-full animate-spin"></div>
-        </div>
-      )}
-
-      {error && (
-        <div className="text-red-500 text-center mt-4">
-          {error}
-        </div>
-      )}
-
-      {!loading && !error && commitInfo && (
+      {commitInfo && (
         <div className="diff-header flex justify-between max-sm:flex-col mb-[2rem] line">
           <div className="diff-main-head flex gap-[0.25rem]">
             <div className="w-16">
@@ -100,7 +84,7 @@ export default function GitDiff() {
             <div>
               <p className="header-font">{commitInfo.message.split("\n")[0]}</p>
               <p className="body-font text-[var(--muted)]">
-                Authored by <span className="text-[var(--body)] font-semibold">{commitInfo.author.name}</span> {formatDaysAgo(commitInfo.author.date)}
+                Authored by  <span className="text-[var(--body)] font-semibold">{commitInfo.author.name}</span> {formatDaysAgo(commitInfo.author.date)}
               </p>
               <p className="font-body text-[var(--body)]">
                 {commitInfo.message.split("\n").slice(1).join("\n")}
@@ -109,12 +93,11 @@ export default function GitDiff() {
           </div>
 
           <div className="p-4 rounded-lg text-xs">
-            {(commitInfo.author.name !== commitInfo.committer.name) && (
-              <p className="text-[var(--muted)] mt-1">
-                Committed by <span className="font-semibold">{commitInfo.committer.name} </span>
-                {formatDaysAgo(commitInfo.committer.date)}
-              </p>
-            )}
+            {/* Only show commiter if its different from the author name */}
+            {(commitInfo.author.name != commitInfo.committer.name) && <p className="text-[var(--muted)] mt-1">
+              Committed by <span className="font-semibold">{commitInfo.committer.name} </span>
+              {formatDaysAgo(commitInfo.committer.date)}
+            </p>}
             <p className="text-gray-600">
               Commit <span className="body-font !font-bold">{commitOid}</span>
             </p>
@@ -127,8 +110,10 @@ export default function GitDiff() {
         </div>
       )}
 
-      {!loading && !error && diffData.length === 0 ? (
-        <p className="text-center text-gray-500">No changes found in this commit.</p>
+      {diffData.length === 0 ? (
+        <div class="min-h-screen flex items-center justify-center">
+          <div class="w-20 h-20 border-4 border-gray-300 border-t-4 border-t-blue-400 rounded-full animate-spin"></div>
+        </div>
       ) : (
         diffData.map((file, index) => <FileDropdown key={index} file={file} />)
       )}
@@ -142,33 +127,63 @@ const FileDropdown = ({ file }) => {
   return (
     <div className="file mb-[2rem]">
       <button className="file-toggle flex text-sm" onClick={() => setIsOpen(!isOpen)}>
-        {!isOpen ? "▶" : "▼"} 
+        {!isOpen ?
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_2_214)">
+              <path d="M7 15.8167L10.8167 12L7 8.175L8.175 7L13.175 12L8.175 17L7 15.8167Z" fill="#6078A9" />
+            </g>
+            <defs>
+              <clipPath id="clip0_2_214">
+                <rect width="20" height="20" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          :
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_2_144)">
+              <path d="M6.175 9L10 12.825L13.825 9L15 10.1833L10 15.1833L5 10.1833L6.175 9Z" fill="#6078A9" />
+            </g>
+            <defs>
+              <clipPath id="clip0_2_144">
+                <rect width="20" height="20" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        }
         <span className="text-[#1C7CD6] font-sm line mb-[0.25rem]">
           {file.headFile.path}
         </span>
       </button>
 
-      {isOpen && (
-        <div className="dropdown-content monospace-font line">
-          {file.hunks.map((hunk, index) => (
-            <div key={index} className="hunk border border-[#E7EBF1]">
-              <pre className="header text-[#6D84B0] line">{hunk.header}</pre>
-              <div className="lines">
-                {hunk.lines.map((line, lineIndex) => (
-                  <div
-                    key={lineIndex}
-                    className={`line mx-1 flex ${line.content.startsWith("+") ? "added" : line.content.startsWith("-") ? "removed" : "unchanged"}`}
-                  >
-                    <span className="w-8 text-center text-[var(--code-secondary)]">{line.baseLineNumber !== null ? line.baseLineNumber : " "}</span>
-                    <span className="w-8 text-center text-[var(--code-secondary)] bg-blue-100 bg-opacity-[0.15]">{line.headLineNumber !== null ? line.headLineNumber : " "}</span>
-                    <span className="flex-1 whitespace-pre-wrap break-words px-2 py-1 text-[var(--code-primary)] font-bold">{line.content}</span>
-                  </div>
-                ))}
+      {
+        isOpen && (
+          <div className="dropdown-content monospace-font line">
+            {file.hunks.map((hunk, index) => (
+              <div key={index} className="hunk border border-[#E7EBF1]">
+                <pre className="header text-[#6D84B0] line">{hunk.header}</pre>
+                <div className="lines">
+                  {hunk.lines.map((line, lineIndex) => (
+                    <div
+                      key={lineIndex}
+                      className={`line mx-1 flex ${line.content.startsWith("+")
+                        ? "added"
+                        : line.content.startsWith("-")
+                          ? "removed"
+                          : "unchanged"
+                        }`}
+                    >
+                      <span className="w-8 text-center text-[var(--code-secondary)]">{line.baseLineNumber !== null ? line.baseLineNumber : " "}</span>
+                      <span className="w-8 text-center text-[var(--code-secondary)] bg-blue-100 bg-opacity-[0.15]">{line.headLineNumber !== null ? line.headLineNumber : " "}</span>
+                      <span className="flex-1 whitespace-pre-wrap break-words px-2 py-1 text-[var(--code-primary)] font-bold">{line.content}</span>
+                    </div>
+                  ))}
+                </div>
+
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )
+      }
     </div>
   );
 };
