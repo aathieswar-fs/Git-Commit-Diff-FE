@@ -14,7 +14,7 @@ This is a web application built with React and Vite that allows users to view Gi
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/AathiEswar/Git-Commit-Diff-FE
+   git clone https://github.com/aathieswar-fs/Git-Commit-Diff-FE
    cd Git-Commit-Diff-FE
    ```
 
@@ -27,7 +27,7 @@ This is a web application built with React and Vite that allows users to view Gi
 
 Create a `.env` file in the project root and add the backend API URL:
    ```sh
-   REACT_BACK_END_API=http://your-backend-url
+   REACT_BACK_END_API=http://localhost:5000
    ```
 
 ## Running the Application
