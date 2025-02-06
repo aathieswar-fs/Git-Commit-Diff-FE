@@ -127,7 +127,7 @@ const FileDropdown = ({ file }) => {
             </defs>
           </svg>
         }
-        <span className="text-[#1C7CD6] font-sm line">
+        <span className="text-[#1C7CD6] font-sm line mb-[0.25rem]">
           {file.headFile.path}
         </span>
       </button>
@@ -150,7 +150,7 @@ const FileDropdown = ({ file }) => {
                         }`}
                     >
                       <span className="w-8 text-center text-[var(--code-secondary)]">{line.baseLineNumber !== null ? line.baseLineNumber : " "}</span>
-                      <span className="w-8 text-center text-[var(--code-secondary)] bg-blue-100 bg-opacity-[0.2]">{line.headLineNumber !== null ? line.headLineNumber : " "}</span>
+                      <span className="w-8 text-center text-[var(--code-secondary)] bg-blue-100 bg-opacity-[0.15]">{line.headLineNumber !== null ? line.headLineNumber : " "}</span>
                       <span className="flex-1 whitespace-pre-wrap break-words px-2 py-1 text-[var(--code-primary)] font-bold">{line.content}</span>
                     </div>
                   ))}
