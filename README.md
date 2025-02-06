@@ -15,6 +15,7 @@ This is a web application built with React and Vite that allows users to view Gi
 1. Clone the repository:
    ```sh
    git clone https://github.com/AathiEswar/Git-Commit-Diff-FE
+   cd Git-Commit-Diff-FE
    ```
 
 2. Install dependencies:
