@@ -1,4 +1,4 @@
-# GitDiff Viewer
+# GitDiff Viewer Frontend
 
 This is a web application built with React and Vite that allows users to view Git commit diffs and commit details. The application fetches and displays changes made in a specific commit with its previous commit, including file modifications and author details.
 
