@@ -8,7 +8,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/repositories/:owner/:repo/commits/:commitOid" element={<App />} />
+        <Route path="/repositories/:owner/:repo/commit/:commitOid" element={<App />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
