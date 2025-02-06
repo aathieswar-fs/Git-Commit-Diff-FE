@@ -1,51 +1,96 @@
 :root {
-  --blue : #1C7CD6;
-  --body : #2B3750;
-  --muted : #6D727C
+	--body: #39496a;
+	--blue: #1c7cd6;
+	--blue-2: #6078a9;
+	--body: #2b3750;
+	--muted: #6d727c;
+	--link: #1c7cd6;
+	--code-primary: #657b83;
+	--code-secondary: #6078a9;
 }
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.monospace-font {
+	font-family: "Courier New";
+	font-weight: bold;
+	font-size: 12px;
 }
 
-body{
-  background-color: #FBFDFF;
+.header-font {
+	color: var(--body);
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 24px;
+}
+
+.body-font {
+	font-family: Arial;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.link-monospace-font {
+	font-family: "Courier New";
+	font-size: 13px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	background: #fbfdff;
 }
 
 .diff-container {
-  font-family:Arial;
-  background: #FBFDFF;
-  color: #32405D; 
-  padding: 2rem;
+	font-family: Arial;
+	background: #fbfdff;
+	color: #32405d;
+	padding: 2rem;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+	.diff-container {
+		padding: 1rem;
+	}
 }
 
 .hunk {
-  margin-bottom: 15px;
-  font-size: 12px;
-  font-weight: 700;
+	margin-bottom: 15px;
+	font-size: 12px;
+	font-weight: 600;
 }
 
 .header {
-  /* background: #f7f7f7; */
-  padding: 5px;
-  /* color: #fff; */
+	background: #ffff;
+	padding: 5px;
 }
 
 .lines pre {
-  padding: 3px;
-  border-radius: 3px;
+	padding: 1px;
+	border-radius: 3px;
 }
 
 .added {
-  background: #d8ffcb;
+	background: #d8ffcb;
 }
 
 .removed {
-  background: #ffe4e9;
+	background: #ffe4e9;
 }
 
 .unchanged {
-  background: #f7f7f7;
+	background: #ffff;
+}
+
+.line {
+	white-space: pre-wrap;
+	word-break: break-word;
+	overflow-wrap: break-word;
+}
+
+.dropdown-content {
+	font-family: monospace;
 }

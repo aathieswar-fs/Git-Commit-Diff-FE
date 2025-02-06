@@ -4,12 +4,12 @@ import { useParams } from "react-router";
 
 export default function GitDiff() {
   const BACK_END_URL = process.env.REACT_BACK_END_API;
-  
+
   const [diffData, setDiffData] = useState([]);
   const [commitInfo, setCommitInfo] = useState(null);
 
   // /repositories/:owner/:repo/commits/:commitOid
-  const { owner ,repo, commitOid }= useParams()
+  const { owner, repo, commitOid } = useParams()
 
 
   async function fetchDiff() {
@@ -53,37 +53,37 @@ export default function GitDiff() {
 
 
   return (
-    <div className="diff-container">
+    <div className="diff-container line">
       {commitInfo && (
-        <div className="diff-header flex justify-between">
-          <div className="diff-main-head flex gap-[0.25rem] items-center">
+        <div className="diff-header flex justify-between max-sm:flex-col mb-[2rem]">
+          <div className="diff-main-head flex gap-[0.25rem]">
             <div className="w-16">
-              <img src={`${commitInfo.avatar_url}`} />
+              <img className="rounded-[50%]" src={`${commitInfo.avatar_url}`} />
             </div>
             <div>
-              <p className="text-md font-semibold">{commitInfo.message.split("\n")[0]}</p>
-              <p className="text-sm text-[var(--muted)]">
+              <p className="header-font">{commitInfo.message.split("\n")[0]}</p>
+              <p className="body-font text-[var(--muted)]">
                 Authored by  <span className="text-[var(--body)] font-semibold">{commitInfo.author.name}</span> {formatDaysAgo(commitInfo.author.date)}
               </p>
-              <p className="text-sm text-[var(--body)]">
+              <p className="font-body text-[var(--body)]">
                 {commitInfo.message.split("\n").slice(1).join("\n")}
               </p>
             </div>
           </div>
 
-          <div className="p-4 rounded-lg mb-6 text-xs">
-            <p className="text-gray-600 mt-1">
+          <div className="p-4 rounded-lg text-xs">
+            {/* Only show commiter if its different from the author name */}
+            {(commitInfo.author.name != commitInfo.committer.name) && <p className="text-[var(--muted)] mt-1">
               Committed by <span className="font-semibold">{commitInfo.committer.name} </span>
               {formatDaysAgo(commitInfo.committer.date)}
-            </p>
+            </p>}
             <p className="text-gray-600">
-              Commit <span className="font-semibold">{commitOid}</span>
+              Commit <span className="body-font !font-bold">{commitOid}</span>
             </p>
             {commitInfo.parents.length > 0 && (
-              <p className=" text-gray-500 mt-1">
-                Parent {" "}
-                <span className="text-[var(--blue)]">{commitInfo.parents[0].oid}</span>
-              </p>
+              <pre className=" text-gray-500 mt-1">
+                Parent <span className="text-[var(--link)] link-monospace-font font-bold">{commitInfo.parents[0].oid}</span>
+              </pre>
             )}
           </div>
         </div>
@@ -103,8 +103,8 @@ const FileDropdown = ({ file }) => {
 
   return (
     <div className="file mb-[2rem]">
-      <button className="file-toggle flex" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ?
+      <button className="file-toggle flex text-sm" onClick={() => setIsOpen(!isOpen)}>
+        {!isOpen ?
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_2_214)">
               <path d="M7 15.8167L10.8167 12L7 8.175L8.175 7L13.175 12L8.175 17L7 15.8167Z" fill="#6078A9" />
@@ -127,37 +127,35 @@ const FileDropdown = ({ file }) => {
             </defs>
           </svg>
         }
-        <span className="text-[#1C7CD6] font-sm">
+        <span className="text-[#1C7CD6] font-sm line">
           {file.headFile.path}
         </span>
       </button>
 
       {
         isOpen && (
-          <div className="dropdown-content ">
+          <div className="dropdown-content monospace-font line">
             {file.hunks.map((hunk, index) => (
               <div key={index} className="hunk border border-[#E7EBF1]">
-                <pre className="header">{hunk.header}</pre>
+                <pre className="header text-[#6D84B0] line">{hunk.header}</pre>
                 <div className="lines">
                   {hunk.lines.map((line, lineIndex) => (
-                    <pre
+                    <div
                       key={lineIndex}
-                      className={`line ${line.content.startsWith("+")
+                      className={`line mx-1 flex ${line.content.startsWith("+")
                         ? "added"
                         : line.content.startsWith("-")
                           ? "removed"
                           : "unchanged"
                         }`}
                     >
-                      <span className="line-numbers">
-                        {line.baseLineNumber !== null ? line.baseLineNumber : "  "}
-                        {" | "}
-                        {line.headLineNumber !== null ? line.headLineNumber : "  "}
-                      </span>
-                      {" " + line.content}
-                    </pre>
+                      <span className="w-8 text-center text-[var(--code-secondary)]">{line.baseLineNumber !== null ? line.baseLineNumber : " "}</span>
+                      <span className="w-8 text-center text-[var(--code-secondary)] bg-blue-100 bg-opacity-[0.2]">{line.headLineNumber !== null ? line.headLineNumber : " "}</span>
+                      <span className="flex-1 whitespace-pre-wrap break-words px-2 py-1 text-[var(--code-primary)] font-bold">{line.content}</span>
+                    </div>
                   ))}
                 </div>
+
               </div>
             ))}
           </div>
